@@ -20,10 +20,28 @@ interface Address {
 
 const STORAGE_KEY = 'travel-addresses';
 
+const INITIAL_ADDRESSES: Address[] = [
+  { id: '1', text: '1234 Legacy Drive, Plano, TX 75024' },
+  { id: '2', text: '5678 Preston Road, Plano, TX 75093' },
+  { id: '3', text: '9012 Coit Road, Plano, TX 75075' },
+  { id: '4', text: '3456 Spring Creek Parkway, Plano, TX 75023' },
+  { id: '5', text: '7890 Park Boulevard, Plano, TX 75074' },
+  { id: '6', text: '2345 Alma Drive, Plano, TX 75023' },
+  { id: '7', text: '6789 Independence Parkway, Plano, TX 75075' },
+  { id: '8', text: '0123 Custer Road, Plano, TX 75075' },
+  { id: '9', text: '4567 Hedgcoxe Road, Plano, TX 75093' },
+  { id: '10', text: '8901 Ohio Drive, Plano, TX 75024' },
+];
+
 export const AddressManager = () => {
   const [addresses, setAddresses] = useState<Address[]>(() => {
     const savedAddresses = localStorage.getItem(STORAGE_KEY);
-    return savedAddresses ? JSON.parse(savedAddresses) : [];
+    if (savedAddresses) {
+      return JSON.parse(savedAddresses);
+    }
+    // Initialize with default addresses if none exist in localStorage
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_ADDRESSES));
+    return INITIAL_ADDRESSES;
   });
   const [newAddress, setNewAddress] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
