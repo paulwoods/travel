@@ -17,90 +17,103 @@ app.use(express.urlencoded({ extended: true }));
 const mapsClient = new Client({});
 
 // Routes
-app.get('/api', (req, res) => {
-  res.json({ message: 'Welcome to the Travel API' });
-});
 
-// Path calculation endpoint
-app.post('/api/path', async (req, res) => {
-  try {
-    const { addresses } = req.body;
+app.post('/api', async (req, res) => {
+  const { addresses } = req.body;
+  // console.log('Received addresses:', addresses);
 
-    // Validate input
-    if (!Array.isArray(addresses) || addresses.length < 2) {
-      return res.status(400).json({ 
-        error: 'At least two addresses are required' 
-      });
+
+  // Validate input
+  if (!Array.isArray(addresses) || addresses.length < 2) {
+    return res.status(400).json({
+      error: 'At least two addresses are required'
+    });
+  }
+
+  // Find home address
+  const homeAddress = addresses.find(addr => addr.isHome);
+  if (!homeAddress) {
+    return res.status(400).json({
+      error: 'One address must be marked as home'
+    });
+  }
+
+  // Get waypoints (non-home addresses)
+  const waypoints = addresses
+    .filter(addr => !addr.isHome)
+    .map(addr => addr.text)
+  ;
+
+  // Calculate route using Google Maps Directions API
+
+  const obj = {
+    params: {
+      key: process.env.GOOGLE_API_KEY,
+      origin: homeAddress.text,
+      destination: homeAddress.text,
+      travelMode: 'driving',
+      waypoints,
+       optimize: true,
     }
+  }
 
-    // Find home addresses
-    const homeAddresses = addresses.filter(addr => addr.isHome);
-    if (homeAddresses.length !== 1) {
-      return res.status(400).json({ 
-        error: 'Only one addresses must be marked as home' 
-      });
-    }
+  mapsClient.directions(obj)
+    .then(response => response.data)
 
-    // Set origin and destination as home addresses
-    const origin = homeAddresses[0].address;
-    const destination = homeAddresses[0].address;
+    .then(data => {
 
-    // Get waypoints (non-home addresses)
-    const waypoints = addresses
-      .filter(addr => !addr.isHome)
-      .map(addr => ({
-        location: addr.address,
-        stopover: true
-      }));
+      const route = data.routes[0];
+      const optimizedWaypoints = route.waypoint_order.map(index => waypoints[index]);
 
-    // Calculate route using Google Maps Directions API
-    const response = await mapsClient.directions({
-      params: {
-        origin,
-        destination,
-        waypoints,
-        optimize: true,
-        key: process.env.GOOGLE_MAPS_API_KEY
+      // Format response
+      const result = {
+        distance: route.legs.reduce((total, leg) => total + leg.distance.value, 0),
+        duration: route.legs.reduce((total, leg) => total + leg.duration.value, 0),
+        waypointOrder: route.waypoint_order,
+        steps: route.legs.map(leg => ({
+          distance: leg.distance,
+          duration: leg.duration,
+          startAddress: leg.start_address,
+          endAddress: leg.end_address,
+          steps: leg.steps.map(step => ({
+            instruction: step.html_instructions,
+            distance: step.distance,
+            duration: step.duration
+          }))
+        }))
+      };
+
+      res.json(result);
+
+    })
+
+    .catch(error => {
+      console.error(error)
+
+      if (error.response) {
+        // the server responsed
+        res.status(error.response.status).json({
+          error: 'Could not calculate route',
+          details: error.response.data.error_message
+        });
+
+      }
+      else if (error.request) {
+        // the  server didn't send a response
+        res.status(500).json({
+          error: 'Could not calculate route',
+          details: error.request
+        });
+      } else {
+        // unknown error
+        res.status(500).json({
+          error: 'Could not calculate route',
+          details: error.message
+        });
       }
     });
 
-    if (response.data.status !== 'OK') {
-      return res.status(400).json({ 
-        error: 'Could not calculate route',
-        details: response.data.status
-      });
-    }
-
-    const route = response.data.routes[0];
-    const optimizedWaypoints = route.waypoint_order.map(index => waypoints[index]);
-
-    // Format response
-    const result = {
-      distance: route.legs.reduce((total, leg) => total + leg.distance.value, 0),
-      duration: route.legs.reduce((total, leg) => total + leg.duration.value, 0),
-      waypointOrder: route.waypoint_order,
-      steps: route.legs.map(leg => ({
-        distance: leg.distance,
-        duration: leg.duration,
-        startAddress: leg.start_address,
-        endAddress: leg.end_address,
-        steps: leg.steps.map(step => ({
-          instruction: step.html_instructions,
-          distance: step.distance,
-          duration: step.duration
-        }))
-      }))
-    };
-
-    res.json(result);
-  } catch (error) {
-    console.error('Error calculating path:', error);
-    res.status(500).json({ 
-      error: 'Failed to calculate path',
-      details: error.message
-    });
-  }
-});
+})
 
 // Error handling middleware
 app.use((err, req, res, next) => {
