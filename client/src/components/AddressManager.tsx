@@ -10,8 +10,9 @@ import {
   IconButton,
   Typography,
   Paper,
+  Tooltip,
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Map as MapIcon } from '@mui/icons-material';
 
 interface Address {
   id: string;
@@ -78,6 +79,11 @@ export const AddressManager = () => {
 
   const handleDelete = (id: string) => {
     setAddresses(addresses.filter(addr => addr.id !== id));
+  };
+
+  const handleOpenInMaps = (address: string) => {
+    const encodedAddress = encodeURIComponent(address);
+    window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
   };
 
   return (
@@ -149,21 +155,35 @@ export const AddressManager = () => {
                 <>
                   <ListItemText primary={address.text} />
                   <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="edit"
-                      onClick={() => handleEditStart(address)}
-                      sx={{ mr: 1 }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      edge="end"
-                      aria-label="delete"
-                      onClick={() => handleDelete(address.id)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <Tooltip title="Open in Google Maps">
+                      <IconButton
+                        edge="end"
+                        aria-label="open in maps"
+                        onClick={() => handleOpenInMaps(address.text)}
+                        sx={{ mr: 1 }}
+                      >
+                        <MapIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit address">
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEditStart(address)}
+                        sx={{ mr: 1 }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Delete address">
+                      <IconButton
+                        edge="end"
+                        aria-label="delete"
+                        onClick={() => handleDelete(address.id)}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </Tooltip>
                   </ListItemSecondaryAction>
                 </>
               )}
