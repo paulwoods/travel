@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -18,11 +18,20 @@ interface Address {
   text: string;
 }
 
+const STORAGE_KEY = 'travel-addresses';
+
 export const AddressManager = () => {
-  const [addresses, setAddresses] = useState<Address[]>([]);
+  const [addresses, setAddresses] = useState<Address[]>(() => {
+    const savedAddresses = localStorage.getItem(STORAGE_KEY);
+    return savedAddresses ? JSON.parse(savedAddresses) : [];
+  });
   const [newAddress, setNewAddress] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(addresses));
+  }, [addresses]);
 
   const handleAddAddress = () => {
     if (newAddress.trim() && newAddress.length <= 200) {
