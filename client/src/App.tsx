@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Container, Button, Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { AddressManager } from './components/AddressManager';
 
 // Styled components
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
@@ -61,15 +62,34 @@ function App() {
               Travel Explorer
             </Typography>
             <Box>
-              <NavButton component={Link} to="/">
+              <Button
+                component={Link}
+                to="/"
+                sx={{ color: 'white', ml: 2 }}
+              >
                 Home
-              </NavButton>
-              <NavButton component={Link} to="/destinations">
+              </Button>
+              <Button
+                component={Link}
+                to="/destinations"
+                sx={{ color: 'white', ml: 2 }}
+              >
                 Destinations
-              </NavButton>
-              <NavButton component={Link} to="/about">
+              </Button>
+              <Button
+                component={Link}
+                to="/addresses"
+                sx={{ color: 'white', ml: 2 }}
+              >
+                Addresses
+              </Button>
+              <Button
+                component={Link}
+                to="/about"
+                sx={{ color: 'white', ml: 2 }}
+              >
                 About
-              </NavButton>
+              </Button>
             </Box>
           </StyledToolbar>
         </StyledAppBar>
@@ -77,6 +97,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/destinations" element={<Destinations />} />
+          <Route path="/addresses" element={<AddressManager />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </Box>
