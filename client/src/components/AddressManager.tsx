@@ -11,6 +11,8 @@ import {
   Typography,
   Paper,
   Tooltip,
+  useTheme,
+  useMediaQuery,
 } from '@mui/material';
 import { Edit as EditIcon, Delete as DeleteIcon, Map as MapIcon } from '@mui/icons-material';
 
@@ -35,12 +37,15 @@ const INITIAL_ADDRESSES: Address[] = [
 ];
 
 export const AddressManager = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+
   const [addresses, setAddresses] = useState<Address[]>(() => {
     const savedAddresses = localStorage.getItem(STORAGE_KEY);
     if (savedAddresses) {
       return JSON.parse(savedAddresses);
     }
-    // Initialize with default addresses if none exist in localStorage
     localStorage.setItem(STORAGE_KEY, JSON.stringify(INITIAL_ADDRESSES));
     return INITIAL_ADDRESSES;
   });
@@ -87,13 +92,36 @@ export const AddressManager = () => {
   };
 
   return (
-    <Box sx={{ maxWidth: 600, mx: 'auto', mt: 4, p: 2 }}>
-      <Typography variant="h5" gutterBottom>
+    <Box sx={{ 
+      maxWidth: { xs: '100%', sm: '600px', md: '800px' }, 
+      mx: 'auto', 
+      mt: { xs: 2, sm: 4 }, 
+      p: { xs: 1, sm: 2 }
+    }}>
+      <Typography 
+        variant="h5" 
+        gutterBottom
+        sx={{ 
+          fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+          textAlign: { xs: 'center', sm: 'left' }
+        }}
+      >
         Address Manager
       </Typography>
       
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Box sx={{ display: 'flex', gap: 1, mb: 2 }}>
+      <Paper 
+        sx={{ 
+          p: { xs: 1.5, sm: 2, md: 3 }, 
+          mb: 2,
+          borderRadius: 2
+        }}
+      >
+        <Box sx={{ 
+          display: 'flex', 
+          gap: 1, 
+          mb: 2,
+          flexDirection: { xs: 'column', sm: 'row' }
+        }}>
           <TextField
             fullWidth
             label="New Address"
@@ -107,6 +135,10 @@ export const AddressManager = () => {
             variant="contained"
             onClick={handleAddAddress}
             disabled={!newAddress.trim() || newAddress.length > 200}
+            sx={{ 
+              minWidth: { xs: '100%', sm: 'auto' },
+              height: { xs: '40px', sm: 'auto' }
+            }}
           >
             Add
           </Button>
@@ -122,10 +154,18 @@ export const AddressManager = () => {
                 borderRadius: 1,
                 border: '1px solid',
                 borderColor: 'divider',
+                flexDirection: { xs: 'column', sm: 'row' },
+                alignItems: { xs: 'stretch', sm: 'center' },
+                gap: { xs: 1, sm: 0 }
               }}
             >
               {editingId === address.id ? (
-                <Box sx={{ display: 'flex', gap: 1, width: '100%' }}>
+                <Box sx={{ 
+                  display: 'flex', 
+                  gap: 1, 
+                  width: '100%',
+                  flexDirection: { xs: 'column', sm: 'row' }
+                }}>
                   <TextField
                     fullWidth
                     value={editText}
@@ -134,33 +174,54 @@ export const AddressManager = () => {
                     helperText={`${editText.length}/200 characters`}
                     size="small"
                   />
-                  <Button
-                    variant="contained"
-                    onClick={handleEditSave}
-                    disabled={!editText.trim() || editText.length > 200}
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    onClick={() => {
-                      setEditingId(null);
-                      setEditText('');
-                    }}
-                  >
-                    Cancel
-                  </Button>
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 1,
+                    flexDirection: { xs: 'row', sm: 'column' }
+                  }}>
+                    <Button
+                      variant="contained"
+                      onClick={handleEditSave}
+                      disabled={!editText.trim() || editText.length > 200}
+                      fullWidth
+                    >
+                      Save
+                    </Button>
+                    <Button
+                      variant="outlined"
+                      onClick={() => {
+                        setEditingId(null);
+                        setEditText('');
+                      }}
+                      fullWidth
+                    >
+                      Cancel
+                    </Button>
+                  </Box>
                 </Box>
               ) : (
                 <>
-                  <ListItemText primary={address.text} />
-                  <ListItemSecondaryAction>
+                  <ListItemText 
+                    primary={address.text} 
+                    sx={{ 
+                      wordBreak: 'break-word',
+                      pr: { xs: 0, sm: 2 }
+                    }}
+                  />
+                  <ListItemSecondaryAction
+                    sx={{
+                      position: { xs: 'static', sm: 'absolute' },
+                      display: 'flex',
+                      gap: 1,
+                      justifyContent: { xs: 'flex-end', sm: 'flex-start' },
+                      mt: { xs: 1, sm: 0 }
+                    }}
+                  >
                     <Tooltip title="Open in Google Maps">
                       <IconButton
                         edge="end"
                         aria-label="open in maps"
                         onClick={() => handleOpenInMaps(address.text)}
-                        sx={{ mr: 1 }}
                       >
                         <MapIcon />
                       </IconButton>
@@ -170,7 +231,6 @@ export const AddressManager = () => {
                         edge="end"
                         aria-label="edit"
                         onClick={() => handleEditStart(address)}
-                        sx={{ mr: 1 }}
                       >
                         <EditIcon />
                       </IconButton>
