@@ -19,8 +19,10 @@ import {
   Delete as DeleteIcon, 
   Map as MapIcon,
   Home as HomeIcon,
-  HomeOutlined as HomeOutlinedIcon 
+  HomeOutlined as HomeOutlinedIcon,
+  Send as SendIcon,
 } from '@mui/icons-material';
+import { useNavigate } from 'react-router-dom';
 
 interface Address {
   id: string;
@@ -47,6 +49,7 @@ export const AddressManager = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
+  const navigate = useNavigate();
 
   const [addresses, setAddresses] = useState<Address[]>(() => {
     const savedAddresses = localStorage.getItem(STORAGE_KEY);
@@ -105,6 +108,29 @@ export const AddressManager = () => {
     })));
   };
 
+  const handleCalculatePath = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/api', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ addresses }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.details || 'Failed to calculate path');
+      }
+
+      const pathData = await response.json();
+      navigate('/path-results', { state: { pathData } });
+    } catch (error) {
+      console.error('Error calculating path:', error);
+      // You might want to show an error message to the user here
+    }
+  };
+
   return (
     <Box sx={{ 
       maxWidth: { xs: '100%', sm: '600px', md: '800px' }, 
@@ -155,6 +181,19 @@ export const AddressManager = () => {
             }}
           >
             Add
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            startIcon={<SendIcon />}
+            onClick={handleCalculatePath}
+            disabled={addresses.length === 0}
+            sx={{ 
+              minWidth: { xs: '100%', sm: 'auto' },
+              height: { xs: '40px', sm: 'auto' }
+            }}
+          >
+            Calculate Path
           </Button>
         </Box>
 
