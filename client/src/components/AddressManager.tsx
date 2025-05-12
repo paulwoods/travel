@@ -22,7 +22,6 @@ import {
   HomeOutlined as HomeOutlinedIcon,
   Send as SendIcon,
 } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
 
 interface Address {
   id: string;
@@ -49,7 +48,6 @@ export const AddressManager = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
-  const navigate = useNavigate();
 
   const [addresses, setAddresses] = useState<Address[]>(() => {
     const savedAddresses = localStorage.getItem(STORAGE_KEY);
@@ -62,6 +60,8 @@ export const AddressManager = () => {
   const [newAddress, setNewAddress] = useState('');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editText, setEditText] = useState('');
+  const [results, setResults] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(addresses));
@@ -108,8 +108,9 @@ export const AddressManager = () => {
     })));
   };
 
-  const handleCalculatePath = async () => {
+  const handleSubmit = async () => {
     try {
+      setError(null);
       const response = await fetch('http://localhost:3000/api', {
         method: 'POST',
         headers: {
@@ -119,15 +120,16 @@ export const AddressManager = () => {
       });
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.details || 'Failed to calculate path');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to submit addresses');
       }
 
-      const pathData = await response.json();
-      navigate('/path-results', { state: { pathData } });
+      const result = await response.json();
+      setResults(result);
+      console.log('Submission result:', result);
     } catch (error) {
-      console.error('Error calculating path:', error);
-      // You might want to show an error message to the user here
+      console.error('Error submitting addresses:', error);
+      setError(error instanceof Error ? error.message : 'An error occurred');
     }
   };
 
@@ -186,14 +188,14 @@ export const AddressManager = () => {
             variant="contained"
             color="secondary"
             startIcon={<SendIcon />}
-            onClick={handleCalculatePath}
+            onClick={handleSubmit}
             disabled={addresses.length === 0}
             sx={{ 
               minWidth: { xs: '100%', sm: 'auto' },
               height: { xs: '40px', sm: 'auto' }
             }}
           >
-            Calculate Path
+            Submit
           </Button>
         </Box>
 
@@ -342,6 +344,77 @@ export const AddressManager = () => {
           ))}
         </List>
       </Paper>
+
+      {error && (
+        <Paper 
+          elevation={2} 
+          sx={{ 
+            mt: 3, 
+            p: 2, 
+            bgcolor: 'error.light',
+            color: 'error.contrastText'
+          }}
+        >
+          <Typography variant="body1">{error}</Typography>
+        </Paper>
+      )}
+
+      {results && (
+        <Paper 
+          elevation={2} 
+          sx={{ 
+            mt: 3, 
+            p: 2,
+            bgcolor: 'background.paper'
+          }}
+        >
+          <Typography variant="h6" gutterBottom>
+            Route Results
+          </Typography>
+          
+          <Box sx={{ mb: 2 }}>
+            <Typography variant="subtitle1">
+              Total Distance: {(results.distance / 1000).toFixed(2)} km
+            </Typography>
+            <Typography variant="subtitle1">
+              Total Duration: {Math.round(results.duration / 60)} minutes
+            </Typography>
+          </Box>
+
+          <Typography variant="subtitle1" gutterBottom>
+            Optimized Route:
+          </Typography>
+          
+          <List>
+            {results.steps.map((step: any, index: number) => (
+              <ListItem key={index} divider>
+                <ListItemText
+                  primary={`Step ${index + 1}`}
+                  secondary={
+                    <>
+                      <Typography component="span" variant="body2">
+                        From: {step.startAddress}
+                      </Typography>
+                      <br />
+                      <Typography component="span" variant="body2">
+                        To: {step.endAddress}
+                      </Typography>
+                      <br />
+                      <Typography component="span" variant="body2">
+                        Distance: {(step.distance.value / 1000).toFixed(2)} km
+                      </Typography>
+                      <br />
+                      <Typography component="span" variant="body2">
+                        Duration: {Math.round(step.duration.value / 60)} minutes
+                      </Typography>
+                    </>
+                  }
+                />
+              </ListItem>
+            ))}
+          </List>
+        </Paper>
+      )}
     </Box>
   );
 }; 
