@@ -13,6 +13,7 @@ import {
   Tooltip,
   useTheme,
   useMediaQuery,
+  CircularProgress,
 } from '@mui/material';
 import { 
   Edit as EditIcon, 
@@ -21,6 +22,7 @@ import {
   Home as HomeIcon,
   HomeOutlined as HomeOutlinedIcon,
   Send as SendIcon,
+  Clear as ClearIcon,
 } from '@mui/icons-material';
 
 interface Address {
@@ -62,6 +64,7 @@ export const AddressManager = () => {
   const [editText, setEditText] = useState('');
   const [results, setResults] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(addresses));
@@ -111,6 +114,7 @@ export const AddressManager = () => {
   const handleSubmit = async () => {
     try {
       setError(null);
+      setIsLoading(true);
       const response = await fetch('http://localhost:3000/api', {
         method: 'POST',
         headers: {
@@ -130,7 +134,14 @@ export const AddressManager = () => {
     } catch (error) {
       console.error('Error submitting addresses:', error);
       setError(error instanceof Error ? error.message : 'An error occurred');
+    } finally {
+      setIsLoading(false);
     }
+  };
+
+  const handleClearResults = () => {
+    setResults(null);
+    setError(null);
   };
 
   return (
@@ -187,15 +198,15 @@ export const AddressManager = () => {
           <Button
             variant="contained"
             color="secondary"
-            startIcon={<SendIcon />}
+            startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
             onClick={handleSubmit}
-            disabled={addresses.length === 0}
+            disabled={addresses.length === 0 || isLoading}
             sx={{ 
               minWidth: { xs: '100%', sm: 'auto' },
               height: { xs: '40px', sm: 'auto' }
             }}
           >
-            Submit
+            {isLoading ? 'Calculating...' : 'Calculate Route'}
           </Button>
         </Box>
 
@@ -345,6 +356,25 @@ export const AddressManager = () => {
         </List>
       </Paper>
 
+      {isLoading && (
+        <Paper 
+          elevation={2} 
+          sx={{ 
+            mt: 3, 
+            p: 3,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 2
+          }}
+        >
+          <CircularProgress />
+          <Typography variant="body1">
+            Calculating optimal route...
+          </Typography>
+        </Paper>
+      )}
+
       {error && (
         <Paper 
           elevation={2} 
@@ -359,7 +389,7 @@ export const AddressManager = () => {
         </Paper>
       )}
 
-      {results && (
+      {results && !isLoading && (
         <Paper 
           elevation={2} 
           sx={{ 
@@ -368,9 +398,25 @@ export const AddressManager = () => {
             bgcolor: 'background.paper'
           }}
         >
-          <Typography variant="h6" gutterBottom>
-            Route Results
-          </Typography>
+          <Box sx={{ 
+            display: 'flex', 
+            justifyContent: 'space-between', 
+            alignItems: 'center',
+            mb: 2
+          }}>
+            <Typography variant="h6">
+              Route Results
+            </Typography>
+            <Button
+              variant="outlined"
+              color="secondary"
+              startIcon={<ClearIcon />}
+              onClick={handleClearResults}
+              size="small"
+            >
+              Clear Results
+            </Button>
+          </Box>
           
           <Box sx={{ mb: 2 }}>
             <Typography variant="subtitle1">
