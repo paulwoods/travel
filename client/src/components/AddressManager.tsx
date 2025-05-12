@@ -14,6 +14,7 @@ import {
   useTheme,
   useMediaQuery,
   CircularProgress,
+  Checkbox,
 } from '@mui/material';
 import { 
   Edit as EditIcon, 
@@ -29,21 +30,22 @@ interface Address {
   id: string;
   text: string;
   isHome: boolean;
+  isSelected: boolean;
 }
 
 const STORAGE_KEY = 'travel-addresses';
 
 const INITIAL_ADDRESSES: Address[] = [
-  { id: '1', text: '1234 Legacy Drive, Plano, TX 75024', isHome: true },
-  { id: '2', text: '5678 Preston Road, Plano, TX 75093', isHome: false },
-  { id: '3', text: '9012 Coit Road, Plano, TX 75075', isHome: false },
-  { id: '4', text: '3456 Spring Creek Parkway, Plano, TX 75023', isHome: false },
-  { id: '5', text: '7890 Park Boulevard, Plano, TX 75074', isHome: false },
-  { id: '6', text: '2345 Alma Drive, Plano, TX 75023', isHome: false },
-  { id: '7', text: '6789 Independence Parkway, Plano, TX 75075', isHome: false },
-  { id: '8', text: '0123 Custer Road, Plano, TX 75075', isHome: false },
-  { id: '9', text: '4567 Hedgcoxe Road, Plano, TX 75093', isHome: false },
-  { id: '10', text: '8901 Ohio Drive, Plano, TX 75024', isHome: false },
+  { id: '1', text: '1234 Legacy Drive, Plano, TX 75024', isHome: true, isSelected: true },
+  { id: '2', text: '5678 Preston Road, Plano, TX 75093', isHome: false, isSelected: true },
+  { id: '3', text: '9012 Coit Road, Plano, TX 75075', isHome: false, isSelected: true },
+  { id: '4', text: '3456 Spring Creek Parkway, Plano, TX 75023', isHome: false, isSelected: true },
+  { id: '5', text: '7890 Park Boulevard, Plano, TX 75074', isHome: false, isSelected: true },
+  { id: '6', text: '2345 Alma Drive, Plano, TX 75023', isHome: false, isSelected: true },
+  { id: '7', text: '6789 Independence Parkway, Plano, TX 75075', isHome: false, isSelected: true },
+  { id: '8', text: '0123 Custer Road, Plano, TX 75075', isHome: false, isSelected: true },
+  { id: '9', text: '4567 Hedgcoxe Road, Plano, TX 75093', isHome: false, isSelected: true },
+  { id: '10', text: '8901 Ohio Drive, Plano, TX 75024', isHome: false, isSelected: true },
 ];
 
 export const AddressManager = () => {
@@ -74,7 +76,12 @@ export const AddressManager = () => {
     if (newAddress.trim() && newAddress.length <= 200) {
       setAddresses([
         ...addresses,
-        { id: Date.now().toString(), text: newAddress.trim(), isHome: false }
+        { 
+          id: Date.now().toString(), 
+          text: newAddress.trim(), 
+          isHome: false, 
+          isSelected: true 
+        }
       ]);
       setNewAddress('');
     }
@@ -107,20 +114,36 @@ export const AddressManager = () => {
   const handleToggleHome = (id: string) => {
     setAddresses(addresses.map(addr => ({
       ...addr,
-      isHome: addr.id === id ? !addr.isHome : false
+      isHome: addr.id === id ? !addr.isHome : false,
+      isSelected: addr.id === id ? true : addr.isSelected
     })));
+  };
+
+  const handleToggleSelect = (id: string) => {
+    const address = addresses.find(addr => addr.id === id);
+    if (address?.isHome) return;
+    
+    setAddresses(addresses.map(addr =>
+      addr.id === id ? { ...addr, isSelected: !addr.isSelected } : addr
+    ));
   };
 
   const handleSubmit = async () => {
     try {
       setError(null);
       setIsLoading(true);
+      const selectedAddresses = addresses.filter(addr => addr.isSelected);
+      
+      if (selectedAddresses.length < 2) {
+        throw new Error('Please select at least two addresses to calculate a route');
+      }
+
       const response = await fetch('http://localhost:3000/api', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ addresses }),
+        body: JSON.stringify({ addresses: selectedAddresses }),
       });
 
       if (!response.ok) {
@@ -200,7 +223,7 @@ export const AddressManager = () => {
             color="secondary"
             startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
             onClick={handleSubmit}
-            disabled={addresses.length === 0 || isLoading}
+            disabled={addresses.filter(addr => addr.isSelected).length < 2 || isLoading}
             sx={{ 
               minWidth: { xs: '100%', sm: 'auto' },
               height: { xs: '40px', sm: 'auto' }
@@ -279,6 +302,18 @@ export const AddressManager = () => {
                 </Box>
               ) : (
                 <>
+                  <Checkbox
+                    checked={address.isSelected}
+                    onChange={() => handleToggleSelect(address.id)}
+                    disabled={address.isHome}
+                    sx={{ 
+                      mr: 1,
+                      '&.Mui-disabled': {
+                        color: 'primary.main',
+                        opacity: 0.8
+                      }
+                    }}
+                  />
                   <ListItemText 
                     primary={
                       <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
