@@ -11,8 +11,6 @@ import {
   Typography,
   Paper,
   Tooltip,
-  useTheme,
-  useMediaQuery,
   CircularProgress,
   Checkbox,
 } from '@mui/material';
@@ -49,9 +47,6 @@ const INITIAL_ADDRESSES: Address[] = [
 ];
 
 export const AddressManager = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
   const [addresses, setAddresses] = useState<Address[]>(() => {
     const savedAddresses = localStorage.getItem(STORAGE_KEY);
