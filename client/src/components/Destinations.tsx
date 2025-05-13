@@ -36,7 +36,7 @@ export const Destinations = () => (
     
     <Grid container spacing={3}>
       {destinations.map((destination) => (
-        <Grid item xs={12} sm={6} md={4} key={destination.id}>
+        <Grid key={destination.id}>
           <Card 
             sx={{ 
               height: '100%',
