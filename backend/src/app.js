@@ -18,10 +18,16 @@ const mapsClient = new Client({});
 
 // Routes
 
+app.get('/', async (req, res) => {
+    res.status(200)
+        .json({
+            message: 'Hello World'
+        });
+
+});
+
 app.post('/api', async (req, res) => {
     const {addresses} = req.body;
-    // console.log('Received addresses:', addresses);
-
 
     // Validate input
     if (!Array.isArray(addresses) || addresses.length < 2) {
@@ -63,7 +69,6 @@ app.post('/api', async (req, res) => {
         .then(data => {
 
             const route = data.routes[0];
-            const optimizedWaypoints = route.waypoint_order.map(index => waypoints[index]);
 
             // Format response
             const result = {
@@ -115,7 +120,7 @@ app.post('/api', async (req, res) => {
 })
 
 // Error handling middleware
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     console.error(err.stack);
     res.status(500).json({message: 'Something went wrong!'});
 });
