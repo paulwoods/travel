@@ -1,0 +1,135 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2025-05-14T01:14:48.824Z",
+  "__export_source": "insomnia.desktop.app:v10.3.1",
+  "resources": [
+    {
+      "_id": "req_add64ad6d23e47b0a5990843cac579c4",
+      "parentId": "wrk_f3e9cab02b7748089fddaedd2ce202cd",
+      "modified": 1747185142605,
+      "created": 1747182039681,
+      "url": "{{ _.base_url }}/api/v1",
+      "name": "hello world",
+      "description": "",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "User-Agent",
+          "value": "insomnia/10.3.1"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1747182039681,
+      "isPrivate": false,
+      "pathParameters": [],
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "wrk_f3e9cab02b7748089fddaedd2ce202cd",
+      "parentId": null,
+      "modified": 1747182029292,
+      "created": 1747182029292,
+      "name": "travel",
+      "description": "",
+      "scope": "collection",
+      "_type": "workspace"
+    },
+    {
+      "_id": "env_7df1edd3bab5ab76bf386bfc149a273251cf196c",
+      "parentId": "wrk_f3e9cab02b7748089fddaedd2ce202cd",
+      "modified": 1747185087837,
+      "created": 1747182029293,
+      "name": "Base Environment",
+      "data": {
+        "base_url": {}
+      },
+      "dataPropertyOrder": {
+        "&": [
+          "base_url"
+        ]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1747182029293,
+      "environmentType": "kv",
+      "kvPairData": [
+        {
+          "id": "envPair_610c4a76c3d74fbcbad287a242ba0e0d",
+          "name": "base_url",
+          "value": "{}",
+          "type": "json",
+          "enabled": true
+        }
+      ],
+      "_type": "environment"
+    },
+    {
+      "_id": "jar_7df1edd3bab5ab76bf386bfc149a273251cf196c",
+      "parentId": "wrk_f3e9cab02b7748089fddaedd2ce202cd",
+      "modified": 1747182029294,
+      "created": 1747182029294,
+      "name": "Default Jar",
+      "cookies": [],
+      "_type": "cookie_jar"
+    },
+    {
+      "_id": "env_22303428b4d549af9d1ad829180ed02f",
+      "parentId": "env_7df1edd3bab5ab76bf386bfc149a273251cf196c",
+      "modified": 1747185080483,
+      "created": 1747185004803,
+      "name": "localhost",
+      "data": {
+        "base_url": "localhost:3000"
+      },
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1747185004803,
+      "environmentType": "kv",
+      "kvPairData": [
+        {
+          "id": "envPair_6d0ef6a33e2647e8b60a5d441be43144",
+          "name": "base_url",
+          "value": "localhost:3000",
+          "type": "str",
+          "enabled": true
+        }
+      ],
+      "_type": "environment"
+    },
+    {
+      "_id": "env_51f50e3c47f44319b3552deff19af1d2",
+      "parentId": "env_7df1edd3bab5ab76bf386bfc149a273251cf196c",
+      "modified": 1747185072294,
+      "created": 1747185048440,
+      "name": "production - vercel",
+      "data": {
+        "base_url": "https://travel-backend-mrpaulwoods-projects.vercel.app"
+      },
+      "dataPropertyOrder": null,
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1747185048440,
+      "environmentType": "kv",
+      "kvPairData": [
+        {
+          "id": "envPair_f75e6c728cd84e6fae55099f8fbc0cd4",
+          "name": "base_url",
+          "value": "https://travel-backend-mrpaulwoods-projects.vercel.app",
+          "type": "str",
+          "enabled": true
+        }
+      ],
+      "_type": "environment"
+    }
+  ]
+}
