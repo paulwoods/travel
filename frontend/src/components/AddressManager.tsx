@@ -17,6 +17,7 @@ import {
 import {
     Clear as ClearIcon,
     Delete as DeleteIcon,
+    DirectionsCar as DirectionsCarIcon,
     Edit as EditIcon,
     Home as HomeIcon,
     HomeOutlined as HomeOutlinedIcon,
@@ -104,6 +105,12 @@ export const AddressManager = () => {
     const handleOpenInMaps = (address: string) => {
         const encodedAddress = encodeURIComponent(address);
         window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+    };
+
+    const handleNavigate = (startAddress: string, endAddress: string) => {
+        const encodedStart = encodeURIComponent(startAddress);
+        const encodedEnd = encodeURIComponent(endAddress);
+        window.open(`https://www.google.com/maps/dir/?api=1&origin=${encodedStart}&destination=${encodedEnd}`, '_blank');
     };
 
     const handleToggleHome = (id: string) => {
@@ -488,6 +495,16 @@ export const AddressManager = () => {
                                         </>
                                     }
                                 />
+                                <ListItemSecondaryAction>
+                                    <Button
+                                        variant="outlined"
+                                        size="small"
+                                        startIcon={<DirectionsCarIcon />}
+                                        onClick={() => handleNavigate(step.startAddress, step.endAddress)}
+                                    >
+                                        Navigate
+                                    </Button>
+                                </ListItemSecondaryAction>
                             </ListItem>
                         ))}
                     </List>
