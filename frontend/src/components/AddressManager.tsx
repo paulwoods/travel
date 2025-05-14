@@ -133,7 +133,7 @@ export const AddressManager = () => {
         throw new Error('Please select at least two addresses to calculate a route');
       }
 
-      const response = await fetch('http://localhost:3000/api', {
+      const response = await fetch('http://localhost:3000/api/v1', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

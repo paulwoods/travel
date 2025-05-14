@@ -56,13 +56,13 @@ interface RouteResult {
 }
 
 // Routes
-app.get('/', async (_req: Request, res: Response) => {
+app.get('/api/v1', async (_req: Request, res: Response) => {
     res.status(200).json({
         message: 'Hello World'
     });
 });
 
-app.post('/api', async (req: Request, res: Response) => {
+app.post('/api/v1', async (req: Request, res: Response) => {
     const { addresses } = req.body as { addresses: Address[] };
 
     // Validate input
@@ -163,3 +163,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 }); 
+
+export default app;
