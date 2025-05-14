@@ -129,4 +129,12 @@ app.use((err, req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
-}); 
+});
+
+console.log("this is a log")
+console.error("this is a error")
+console.warn("this is a warn")
+console.info("this is a info")
+console.debug("this is a debug")
+console.trace("this is a trace")
+
