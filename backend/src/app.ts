@@ -18,8 +18,12 @@ const mapsClient = new Client({});
 
 // Types
 interface Address {
+    id: string;
     text: string;
     isHome: boolean;
+    isSelected: boolean;
+    isStart: boolean;
+    isDestination: boolean;
 }
 
 interface RouteStep {
@@ -72,17 +76,19 @@ app.post('/api/v1', async (req: Request, res: Response) => {
         });
     }
 
-    // Find home address
-    const homeAddress = addresses.find(addr => addr.isHome);
-    if (!homeAddress) {
+    // Find start and destination addresses
+    const startAddress = addresses.find(addr => addr.isStart);
+    const destinationAddress = addresses.find(addr => addr.isDestination);
+
+    if (!startAddress || !destinationAddress) {
         return res.status(400).json({
-            error: 'One address must be marked as home'
+            error: 'One address must be marked as start and one as destination'
         });
     }
 
-    // Get waypoints (non-home addresses)
+    // Get waypoints (addresses that are neither start nor destination)
     const waypoints = addresses
-        .filter(addr => !addr.isHome)
+        .filter(addr => !addr.isStart && !addr.isDestination)
         .map(addr => addr.text);
 
     // Calculate route using Google Maps Directions API
@@ -97,8 +103,8 @@ app.post('/api/v1', async (req: Request, res: Response) => {
         const response = await mapsClient.directions({
             params: {
                 key: apiKey,
-                origin: homeAddress.text,
-                destination: homeAddress.text,
+                origin: startAddress.text,
+                destination: destinationAddress.text,
                 mode: TravelMode.driving,
                 waypoints: waypoints,
                 optimize: true
