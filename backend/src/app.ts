@@ -20,7 +20,6 @@ const mapsClient = new Client({});
 interface Address {
     id: string;
     text: string;
-    isHome: boolean;
     isSelected: boolean;
     isStart: boolean;
     isDestination: boolean;

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 import {
     Box,
     Button,
@@ -28,7 +28,6 @@ import {
 interface Address {
     id: string;
     text: string;
-    isHome: boolean;
     isSelected: boolean;
     isStart: boolean;
     isDestination: boolean;
@@ -37,16 +36,16 @@ interface Address {
 const STORAGE_KEY = 'travel-addresses';
 
 const INITIAL_ADDRESSES: Address[] = [
-    {id: '1', text: '1234 Legacy Drive, Plano, TX 75024', isHome: true, isSelected: true, isStart: false, isDestination: false},
-    {id: '2', text: '5678 Preston Road, Plano, TX 75093', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '3', text: '9012 Coit Road, Plano, TX 75075', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '4', text: '3456 Spring Creek Parkway, Plano, TX 75023', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '5', text: '7890 Park Boulevard, Plano, TX 75074', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '6', text: '2345 Alma Drive, Plano, TX 75023', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '7', text: '6789 Independence Parkway, Plano, TX 75075', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '8', text: '0123 Custer Road, Plano, TX 75075', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '9', text: '4567 Hedgcoxe Road, Plano, TX 75093', isHome: false, isSelected: true, isStart: false, isDestination: false},
-    {id: '10', text: '8901 Ohio Drive, Plano, TX 75024', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    { id: '1', text: '1234 Legacy Drive, Plano, TX 75024', isSelected: true, isStart: false, isDestination: false },
+    { id: '2', text: '5678 Preston Road, Plano, TX 75093', isSelected: true, isStart: false, isDestination: false },
+    { id: '3', text: '9012 Coit Road, Plano, TX 75075', isSelected: true, isStart: false, isDestination: false },
+    { id: '4', text: '3456 Spring Creek Parkway, Plano, TX 75023', isSelected: true, isStart: false, isDestination: false },
+    { id: '5', text: '7890 Park Boulevard, Plano, TX 75074', isSelected: true, isStart: false, isDestination: false },
+    { id: '6', text: '2345 Alma Drive, Plano, TX 75023', isSelected: true, isStart: false, isDestination: false },
+    { id: '7', text: '6789 Independence Parkway, Plano, TX 75075', isSelected: true, isStart: false, isDestination: false },
+    { id: '8', text: '0123 Custer Road, Plano, TX 75075', isSelected: true, isStart: false, isDestination: false },
+    { id: '9', text: '4567 Hedgcoxe Road, Plano, TX 75093', isSelected: true, isStart: false, isDestination: false },
+    { id: '10', text: '8901 Ohio Drive, Plano, TX 75024', isSelected: true, isStart: false, isDestination: false },
 ];
 
 export const AddressManager = () => {
@@ -77,7 +76,6 @@ export const AddressManager = () => {
                 {
                     id: Date.now().toString(),
                     text: newAddress.trim(),
-                    isHome: false,
                     isSelected: true,
                     isStart: false,
                     isDestination: false
@@ -95,7 +93,7 @@ export const AddressManager = () => {
     const handleEditSave = () => {
         if (editingId && editText.trim() && editText.length <= 200) {
             setAddresses(addresses.map(addr =>
-                addr.id === editingId ? {...addr, text: editText.trim()} : addr
+                addr.id === editingId ? { ...addr, text: editText.trim() } : addr
             ));
             setEditingId(null);
             setEditText('');
@@ -117,20 +115,11 @@ export const AddressManager = () => {
         window.open(`https://www.google.com/maps/dir/?api=1&origin=${encodedStart}&destination=${encodedEnd}`, '_blank');
     };
 
-    const handleToggleHome = (id: string) => {
-        setAddresses(addresses.map(addr => ({
-            ...addr,
-            isHome: addr.id === id ? !addr.isHome : false,
-            isSelected: addr.id === id ? true : addr.isSelected
-        })));
-    };
-
     const handleToggleSelect = (id: string) => {
         const address = addresses.find(addr => addr.id === id);
-        if (address?.isHome) return;
 
         setAddresses(addresses.map(addr =>
-            addr.id === id ? {...addr, isSelected: !addr.isSelected} : addr
+            addr.id === id ? { ...addr, isSelected: !addr.isSelected } : addr
         ));
     };
 
@@ -164,7 +153,7 @@ export const AddressManager = () => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({addresses: selectedAddresses}),
+                body: JSON.stringify({ addresses: selectedAddresses }),
             });
 
             if (!response.ok) {
@@ -190,17 +179,17 @@ export const AddressManager = () => {
 
     return (
         <Box sx={{
-            maxWidth: {xs: '100%', sm: '600px', md: '800px'},
+            maxWidth: { xs: '100%', sm: '600px', md: '800px' },
             mx: 'auto',
-            mt: {xs: 2, sm: 4},
-            p: {xs: 1, sm: 2}
+            mt: { xs: 2, sm: 4 },
+            p: { xs: 1, sm: 2 }
         }}>
             <Typography
                 variant="h5"
                 gutterBottom
                 sx={{
-                    fontSize: {xs: '1.5rem', sm: '1.75rem', md: '2rem'},
-                    textAlign: {xs: 'center', sm: 'left'}
+                    fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
+                    textAlign: { xs: 'center', sm: 'left' }
                 }}
             >
                 Address Manager
@@ -208,7 +197,7 @@ export const AddressManager = () => {
 
             <Paper
                 sx={{
-                    p: {xs: 1.5, sm: 2, md: 3},
+                    p: { xs: 1.5, sm: 2, md: 3 },
                     mb: 2,
                     borderRadius: 2
                 }}
@@ -217,7 +206,7 @@ export const AddressManager = () => {
                     display: 'flex',
                     gap: 1,
                     mb: 2,
-                    flexDirection: {xs: 'column', sm: 'row'}
+                    flexDirection: { xs: 'column', sm: 'row' }
                 }}>
                     <TextField
                         fullWidth
@@ -233,8 +222,8 @@ export const AddressManager = () => {
                         onClick={handleAddAddress}
                         disabled={!newAddress.trim() || newAddress.length > 200}
                         sx={{
-                            minWidth: {xs: '100%', sm: 'auto'},
-                            height: {xs: '40px', sm: 'auto'}
+                            minWidth: { xs: '100%', sm: 'auto' },
+                            height: { xs: '40px', sm: 'auto' }
                         }}
                     >
                         Add
@@ -242,12 +231,12 @@ export const AddressManager = () => {
                     <Button
                         variant="contained"
                         color="secondary"
-                        startIcon={isLoading ? <CircularProgress size={20} color="inherit"/> : <SendIcon/>}
+                        startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
                         onClick={handleSubmit}
                         disabled={addresses.filter(addr => addr.isSelected).length < 2 || isLoading}
                         sx={{
-                            minWidth: {xs: '100%', sm: 'auto'},
-                            height: {xs: '40px', sm: 'auto'}
+                            minWidth: { xs: '100%', sm: 'auto' },
+                            height: { xs: '40px', sm: 'auto' }
                         }}
                     >
                         {isLoading ? 'Calculating...' : 'Calculate Route'}
@@ -264,21 +253,10 @@ export const AddressManager = () => {
                                 borderRadius: 1,
                                 border: '1px solid',
                                 borderColor: 'divider',
-                                flexDirection: {xs: 'column', sm: 'row'},
-                                alignItems: {xs: 'stretch', sm: 'center'},
-                                gap: {xs: 1, sm: 0},
-                                position: 'relative',
-                                '&::before': address.isHome ? {
-                                    content: '""',
-                                    position: 'absolute',
-                                    left: 0,
-                                    top: 0,
-                                    bottom: 0,
-                                    width: 4,
-                                    bgcolor: 'primary.main',
-                                    borderTopLeftRadius: 4,
-                                    borderBottomLeftRadius: 4
-                                } : {}
+                                flexDirection: { xs: 'column', sm: 'row' },
+                                alignItems: { xs: 'stretch', sm: 'center' },
+                                gap: { xs: 1, sm: 0 },
+                                position: 'relative'
                             }}
                         >
                             {editingId === address.id ? (
@@ -286,7 +264,7 @@ export const AddressManager = () => {
                                     display: 'flex',
                                     gap: 1,
                                     width: '100%',
-                                    flexDirection: {xs: 'column', sm: 'row'}
+                                    flexDirection: { xs: 'column', sm: 'row' }
                                 }}>
                                     <TextField
                                         fullWidth
@@ -299,7 +277,7 @@ export const AddressManager = () => {
                                     <Box sx={{
                                         display: 'flex',
                                         gap: 1,
-                                        flexDirection: {xs: 'row', sm: 'column'}
+                                        flexDirection: { xs: 'row', sm: 'column' }
                                     }}>
                                         <Button
                                             variant="contained"
@@ -326,7 +304,7 @@ export const AddressManager = () => {
                                     <Checkbox
                                         checked={address.isSelected}
                                         onChange={() => handleToggleSelect(address.id)}
-                                        disabled={address.isHome}
+                                        disabled={address.isStart || address.isDestination}
                                         sx={{
                                             mr: 1,
                                             '&.Mui-disabled': {
@@ -337,20 +315,8 @@ export const AddressManager = () => {
                                     />
                                     <ListItemText
                                         primary={
-                                            <Box sx={{display: 'flex', alignItems: 'center', gap: 1}}>
+                                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                                 {address.text}
-                                                {address.isHome && (
-                                                    <Typography
-                                                        variant="caption"
-                                                        sx={{
-                                                            color: 'primary.main',
-                                                            fontWeight: 'bold',
-                                                            ml: 1
-                                                        }}
-                                                    >
-                                                        (Home)
-                                                    </Typography>
-                                                )}
                                                 {address.isStart && (
                                                     <Typography
                                                         variant="caption"
@@ -379,29 +345,18 @@ export const AddressManager = () => {
                                         }
                                         sx={{
                                             wordBreak: 'break-word',
-                                            pr: {xs: 0, sm: 2}
+                                            pr: { xs: 0, sm: 2 }
                                         }}
                                     />
                                     <ListItemSecondaryAction
                                         sx={{
-                                            position: {xs: 'static', sm: 'absolute'},
+                                            position: { xs: 'static', sm: 'absolute' },
                                             display: 'flex',
                                             gap: 1,
-                                            justifyContent: {xs: 'flex-end', sm: 'flex-start'},
-                                            mt: {xs: 1, sm: 0}
+                                            justifyContent: { xs: 'flex-end', sm: 'flex-start' },
+                                            mt: { xs: 1, sm: 0 }
                                         }}
                                     >
-                                        <Tooltip
-                                            title={address.isHome ? "Remove as home address" : "Set as home address"}>
-                                            <IconButton
-                                                edge="end"
-                                                aria-label="toggle home"
-                                                onClick={() => handleToggleHome(address.id)}
-                                                color={address.isHome ? "primary" : "default"}
-                                            >
-                                                {address.isHome ? <HomeIcon/> : <HomeOutlinedIcon/>}
-                                            </IconButton>
-                                        </Tooltip>
                                         <Tooltip title={address.isStart ? "Remove as start address" : "Set as start address"}>
                                             <IconButton
                                                 edge="end"
@@ -409,7 +364,7 @@ export const AddressManager = () => {
                                                 onClick={() => handleToggleStart(address.id)}
                                                 color={address.isStart ? "success" : "default"}
                                             >
-                                                <DirectionsCarIcon/>
+                                                <DirectionsCarIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title={address.isDestination ? "Remove as destination" : "Set as destination"}>
@@ -419,7 +374,7 @@ export const AddressManager = () => {
                                                 onClick={() => handleToggleDestination(address.id)}
                                                 color={address.isDestination ? "secondary" : "default"}
                                             >
-                                                <MapIcon/>
+                                                <MapIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title="Open in Google Maps">
@@ -428,7 +383,7 @@ export const AddressManager = () => {
                                                 aria-label="open in maps"
                                                 onClick={() => handleOpenInMaps(address.text)}
                                             >
-                                                <MapIcon/>
+                                                <MapIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title="Edit address">
@@ -437,7 +392,7 @@ export const AddressManager = () => {
                                                 aria-label="edit"
                                                 onClick={() => handleEditStart(address)}
                                             >
-                                                <EditIcon/>
+                                                <EditIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title="Delete address">
@@ -446,7 +401,7 @@ export const AddressManager = () => {
                                                 aria-label="delete"
                                                 onClick={() => handleDelete(address.id)}
                                             >
-                                                <DeleteIcon/>
+                                                <DeleteIcon />
                                             </IconButton>
                                         </Tooltip>
                                     </ListItemSecondaryAction>
@@ -469,7 +424,7 @@ export const AddressManager = () => {
                         gap: 2
                     }}
                 >
-                    <CircularProgress/>
+                    <CircularProgress />
                     <Typography variant="body1">
                         Calculating optimal route...
                     </Typography>
@@ -511,7 +466,7 @@ export const AddressManager = () => {
                         <Button
                             variant="outlined"
                             color="secondary"
-                            startIcon={<ClearIcon/>}
+                            startIcon={<ClearIcon />}
                             onClick={handleClearResults}
                             size="small"
                         >
@@ -519,7 +474,7 @@ export const AddressManager = () => {
                         </Button>
                     </Box>
 
-                    <Box sx={{mb: 2}}>
+                    <Box sx={{ mb: 2 }}>
                         <Typography variant="subtitle1">
                             Total Distance: {(results.distance / 1000).toFixed(2)} km
                         </Typography>
@@ -542,15 +497,15 @@ export const AddressManager = () => {
                                             <Typography component="span" variant="body2">
                                                 From: {step.startAddress}
                                             </Typography>
-                                            <br/>
+                                            <br />
                                             <Typography component="span" variant="body2">
                                                 To: {step.endAddress}
                                             </Typography>
-                                            <br/>
+                                            <br />
                                             <Typography component="span" variant="body2">
                                                 Distance: {(step.distance.value / 1000).toFixed(2)} km
                                             </Typography>
-                                            <br/>
+                                            <br />
                                             <Typography component="span" variant="body2">
                                                 Duration: {Math.round(step.duration.value / 60)} minutes
                                             </Typography>
