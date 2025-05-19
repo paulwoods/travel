@@ -159,7 +159,7 @@ export const AddressManager = () => {
             }
 
             // todo: use env variables for the url base
-            const response = await fetch('https://travel-backend-mrpaulwoods-projects.vercel.app/api/v1', {
+            const response = await fetch(`${import.meta.env.VITE_BASE_URL}/api/v1`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

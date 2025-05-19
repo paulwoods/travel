@@ -24,6 +24,9 @@ function App() {
                         >
                             Travel Planner
                         </Typography>
+                        <div>
+                            {import.meta.env.VITE_VERCEL_ENV}
+                        </div>
                     </Toolbar>
                 </AppBar>
 
