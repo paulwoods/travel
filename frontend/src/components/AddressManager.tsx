@@ -17,10 +17,12 @@ import {
 import {
     Clear as ClearIcon,
     Delete as DeleteIcon,
-    DirectionsCar as DirectionsCarIcon,
+    Flag as FlagIcon,
+    SportsScore as SportsScoreIcon,
     Edit as EditIcon,
     Map as MapIcon,
     Send as SendIcon,
+    DirectionsCar as DirectionsCarIcon
 } from '@mui/icons-material';
 
 interface Address {
@@ -163,7 +165,6 @@ export const AddressManager = () => {
 
             const result = await response.json();
             setResults(result);
-            console.log('Submission result:', result);
         } catch (error) {
             console.error('Error submitting addresses:', error);
             setError(error instanceof Error ? error.message : 'An error occurred');
@@ -364,7 +365,7 @@ export const AddressManager = () => {
                                                 onClick={() => handleToggleStart(address.id)}
                                                 color={address.isStart ? "success" : "default"}
                                             >
-                                                <DirectionsCarIcon />
+                                                <FlagIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title={address.isDestination ? "Remove as destination" : "Set as destination"}>
@@ -374,7 +375,7 @@ export const AddressManager = () => {
                                                 onClick={() => handleToggleDestination(address.id)}
                                                 color={address.isDestination ? "secondary" : "default"}
                                             >
-                                                <MapIcon />
+                                                <SportsScoreIcon />
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title="Open in Google Maps">
