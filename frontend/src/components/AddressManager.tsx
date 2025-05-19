@@ -30,21 +30,23 @@ interface Address {
     text: string;
     isHome: boolean;
     isSelected: boolean;
+    isStart: boolean;
+    isDestination: boolean;
 }
 
 const STORAGE_KEY = 'travel-addresses';
 
 const INITIAL_ADDRESSES: Address[] = [
-    {id: '1', text: '1234 Legacy Drive, Plano, TX 75024', isHome: true, isSelected: true},
-    {id: '2', text: '5678 Preston Road, Plano, TX 75093', isHome: false, isSelected: true},
-    {id: '3', text: '9012 Coit Road, Plano, TX 75075', isHome: false, isSelected: true},
-    {id: '4', text: '3456 Spring Creek Parkway, Plano, TX 75023', isHome: false, isSelected: true},
-    {id: '5', text: '7890 Park Boulevard, Plano, TX 75074', isHome: false, isSelected: true},
-    {id: '6', text: '2345 Alma Drive, Plano, TX 75023', isHome: false, isSelected: true},
-    {id: '7', text: '6789 Independence Parkway, Plano, TX 75075', isHome: false, isSelected: true},
-    {id: '8', text: '0123 Custer Road, Plano, TX 75075', isHome: false, isSelected: true},
-    {id: '9', text: '4567 Hedgcoxe Road, Plano, TX 75093', isHome: false, isSelected: true},
-    {id: '10', text: '8901 Ohio Drive, Plano, TX 75024', isHome: false, isSelected: true},
+    {id: '1', text: '1234 Legacy Drive, Plano, TX 75024', isHome: true, isSelected: true, isStart: false, isDestination: false},
+    {id: '2', text: '5678 Preston Road, Plano, TX 75093', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '3', text: '9012 Coit Road, Plano, TX 75075', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '4', text: '3456 Spring Creek Parkway, Plano, TX 75023', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '5', text: '7890 Park Boulevard, Plano, TX 75074', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '6', text: '2345 Alma Drive, Plano, TX 75023', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '7', text: '6789 Independence Parkway, Plano, TX 75075', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '8', text: '0123 Custer Road, Plano, TX 75075', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '9', text: '4567 Hedgcoxe Road, Plano, TX 75093', isHome: false, isSelected: true, isStart: false, isDestination: false},
+    {id: '10', text: '8901 Ohio Drive, Plano, TX 75024', isHome: false, isSelected: true, isStart: false, isDestination: false},
 ];
 
 export const AddressManager = () => {
@@ -76,7 +78,9 @@ export const AddressManager = () => {
                     id: Date.now().toString(),
                     text: newAddress.trim(),
                     isHome: false,
-                    isSelected: true
+                    isSelected: true,
+                    isStart: false,
+                    isDestination: false
                 }
             ]);
             setNewAddress('');
@@ -128,6 +132,20 @@ export const AddressManager = () => {
         setAddresses(addresses.map(addr =>
             addr.id === id ? {...addr, isSelected: !addr.isSelected} : addr
         ));
+    };
+
+    const handleToggleStart = (id: string) => {
+        setAddresses(addresses.map(addr => ({
+            ...addr,
+            isStart: addr.id === id ? !addr.isStart : false
+        })));
+    };
+
+    const handleToggleDestination = (id: string) => {
+        setAddresses(addresses.map(addr => ({
+            ...addr,
+            isDestination: addr.id === id ? !addr.isDestination : false
+        })));
     };
 
     const handleSubmit = async () => {
@@ -333,6 +351,30 @@ export const AddressManager = () => {
                                                         (Home)
                                                     </Typography>
                                                 )}
+                                                {address.isStart && (
+                                                    <Typography
+                                                        variant="caption"
+                                                        sx={{
+                                                            color: 'success.main',
+                                                            fontWeight: 'bold',
+                                                            ml: 1
+                                                        }}
+                                                    >
+                                                        (Start)
+                                                    </Typography>
+                                                )}
+                                                {address.isDestination && (
+                                                    <Typography
+                                                        variant="caption"
+                                                        sx={{
+                                                            color: 'secondary.main',
+                                                            fontWeight: 'bold',
+                                                            ml: 1
+                                                        }}
+                                                    >
+                                                        (Destination)
+                                                    </Typography>
+                                                )}
                                             </Box>
                                         }
                                         sx={{
@@ -358,6 +400,26 @@ export const AddressManager = () => {
                                                 color={address.isHome ? "primary" : "default"}
                                             >
                                                 {address.isHome ? <HomeIcon/> : <HomeOutlinedIcon/>}
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={address.isStart ? "Remove as start address" : "Set as start address"}>
+                                            <IconButton
+                                                edge="end"
+                                                aria-label="toggle start"
+                                                onClick={() => handleToggleStart(address.id)}
+                                                color={address.isStart ? "success" : "default"}
+                                            >
+                                                <DirectionsCarIcon/>
+                                            </IconButton>
+                                        </Tooltip>
+                                        <Tooltip title={address.isDestination ? "Remove as destination" : "Set as destination"}>
+                                            <IconButton
+                                                edge="end"
+                                                aria-label="toggle destination"
+                                                onClick={() => handleToggleDestination(address.id)}
+                                                color={address.isDestination ? "secondary" : "default"}
+                                            >
+                                                <MapIcon/>
                                             </IconButton>
                                         </Tooltip>
                                         <Tooltip title="Open in Google Maps">
