@@ -116,8 +116,6 @@ export const AddressManager = () => {
     };
 
     const handleToggleSelect = (id: string) => {
-        const address = addresses.find(addr => addr.id === id);
-
         setAddresses(addresses.map(addr =>
             addr.id === id ? { ...addr, isSelected: !addr.isSelected } : addr
         ));
