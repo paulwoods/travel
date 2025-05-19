@@ -19,8 +19,6 @@ import {
     Delete as DeleteIcon,
     DirectionsCar as DirectionsCarIcon,
     Edit as EditIcon,
-    Home as HomeIcon,
-    HomeOutlined as HomeOutlinedIcon,
     Map as MapIcon,
     Send as SendIcon,
 } from '@mui/icons-material';
@@ -126,6 +124,7 @@ export const AddressManager = () => {
     const handleToggleStart = (id: string) => {
         setAddresses(addresses.map(addr => ({
             ...addr,
+            isSelected: addr.id === id ? true : addr.isSelected,
             isStart: addr.id === id ? !addr.isStart : false
         })));
     };
@@ -133,6 +132,7 @@ export const AddressManager = () => {
     const handleToggleDestination = (id: string) => {
         setAddresses(addresses.map(addr => ({
             ...addr,
+            isSelected: addr.id === id ? true : addr.isSelected,
             isDestination: addr.id === id ? !addr.isDestination : false
         })));
     };
@@ -302,7 +302,7 @@ export const AddressManager = () => {
                             ) : (
                                 <>
                                     <Checkbox
-                                        checked={address.isSelected}
+                                        checked={address.isSelected ? true : false}
                                         onChange={() => handleToggleSelect(address.id)}
                                         disabled={address.isStart || address.isDestination}
                                         sx={{

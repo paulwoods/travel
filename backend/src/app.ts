@@ -90,6 +90,9 @@ app.post('/api/v1', async (req: Request, res: Response) => {
         .filter(addr => !addr.isStart && !addr.isDestination)
         .map(addr => addr.text);
 
+        console.log("###################")
+        console.log(waypoints)
+
     // Calculate route using Google Maps Directions API
     const apiKey = process.env.GOOGLE_API_KEY;
     if (!apiKey) {
@@ -106,7 +109,7 @@ app.post('/api/v1', async (req: Request, res: Response) => {
                 destination: destinationAddress.text,
                 mode: TravelMode.driving,
                 waypoints: waypoints,
-                optimize: true
+                optimize: waypoints.length > 0 ? true : false
             }
         });
 
