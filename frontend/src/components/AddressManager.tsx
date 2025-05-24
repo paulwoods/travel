@@ -13,6 +13,11 @@ import {
     Button,
     Checkbox,
     CircularProgress,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogContentText,
+    DialogTitle,
     IconButton,
     List,
     ListItem,
@@ -64,6 +69,8 @@ export const AddressManager = () => {
     const [results, setResults] = useState<any>(null);
     const [error, setError] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
+    const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+    const [addressToDelete, setAddressToDelete] = useState<string | null>(null);
 
     useEffect(() => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(addresses));
@@ -100,8 +107,22 @@ export const AddressManager = () => {
         }
     };
 
-    const handleDelete = (id: string) => {
-        setAddresses(addresses.filter(addr => addr.id !== id));
+    const handleDeleteClick = (id: string) => {
+        setAddressToDelete(id);
+        setDeleteDialogOpen(true);
+    };
+
+    const handleDeleteConfirm = () => {
+        if (addressToDelete) {
+            setAddresses(addresses.filter(addr => addr.id !== addressToDelete));
+            setDeleteDialogOpen(false);
+            setAddressToDelete(null);
+        }
+    };
+
+    const handleDeleteCancel = () => {
+        setDeleteDialogOpen(false);
+        setAddressToDelete(null);
     };
 
     const handleOpenInMaps = (address: string) => {
@@ -390,7 +411,7 @@ export const AddressManager = () => {
                                             <IconButton
                                                 edge="end"
                                                 aria-label="delete"
-                                                onClick={() => handleDelete(address.id)}
+                                                onClick={() => handleDeleteClick(address.id)}
                                             >
                                                 <DeleteIcon />
                                             </IconButton>
@@ -541,6 +562,30 @@ export const AddressManager = () => {
                     </List>
                 </Paper>
             )}
+
+            <Dialog
+                open={deleteDialogOpen}
+                onClose={handleDeleteCancel}
+                aria-labelledby="delete-dialog-title"
+                aria-describedby="delete-dialog-description"
+            >
+                <DialogTitle id="delete-dialog-title">
+                    Delete Address
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="delete-dialog-description">
+                        Are you sure you want to delete this address? This action cannot be undone.
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDeleteCancel} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleDeleteConfirm} color="error" autoFocus>
+                        Delete
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Box>
     );
 }; 
