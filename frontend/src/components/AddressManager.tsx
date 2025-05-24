@@ -1,4 +1,13 @@
-import { useEffect, useState } from 'react';
+import {
+    Clear as ClearIcon,
+    Delete as DeleteIcon,
+    DirectionsCar as DirectionsCarIcon,
+    Edit as EditIcon,
+    Flag as FlagIcon,
+    Map as MapIcon,
+    Send as SendIcon,
+    SportsScore as SportsScoreIcon
+} from '@mui/icons-material';
 import {
     Box,
     Button,
@@ -14,16 +23,7 @@ import {
     Tooltip,
     Typography,
 } from '@mui/material';
-import {
-    Clear as ClearIcon,
-    Delete as DeleteIcon,
-    Flag as FlagIcon,
-    SportsScore as SportsScoreIcon,
-    Edit as EditIcon,
-    Map as MapIcon,
-    Send as SendIcon,
-    DirectionsCar as DirectionsCarIcon
-} from '@mui/icons-material';
+import { useEffect, useState } from 'react';
 
 interface Address {
     id: string;
@@ -287,29 +287,33 @@ export const AddressManager = () => {
                                 </Box>
                             ) : (
                                 <>
-                                    <Checkbox
-                                        checked={address.isSelected ? true : false}
-                                        onChange={() => handleToggleSelect(address.id)}
-                                        disabled={address.isStart || address.isDestination}
-                                        sx={{
-                                            mr: 1,
-                                            '&.Mui-disabled': {
-                                                color: 'primary.main',
-                                                opacity: 0.8
-                                            }
-                                        }}
-                                    />
                                     <ListItemText
                                         primary={
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+
+                                                <Checkbox
+                                                    checked={address.isSelected ? true : false}
+                                                    onChange={() => handleToggleSelect(address.id)}
+                                                    disabled={address.isStart || address.isDestination}
+                                                    sx={{
+                                                        mr: 1,
+                                                        '&.Mui-disabled': {
+                                                            color: 'primary.main',
+                                                            opacity: 0.8
+                                                        }
+                                                    }}
+                                                />
+
                                                 {address.text}
+
                                                 {address.isStart && (
                                                     <Typography
                                                         variant="caption"
                                                         sx={{
                                                             color: 'success.main',
                                                             fontWeight: 'bold',
-                                                            ml: 1
+                                                            ml: 1,
+                                                            whiteSpace: "nowrap"
                                                         }}
                                                     >
                                                         (Start)
@@ -321,7 +325,8 @@ export const AddressManager = () => {
                                                         sx={{
                                                             color: 'secondary.main',
                                                             fontWeight: 'bold',
-                                                            ml: 1
+                                                            ml: 1,
+                                                            whiteSpace: "nowrap"
                                                         }}
                                                     >
                                                         (Destination)
@@ -339,7 +344,7 @@ export const AddressManager = () => {
                                             position: { xs: 'static', sm: 'absolute' },
                                             display: 'flex',
                                             gap: 1,
-                                            justifyContent: { xs: 'flex-end', sm: 'flex-start' },
+                                            justifyContent: { xs: 'center', sm: 'flex-start' },
                                             mt: { xs: 1, sm: 0 }
                                         }}
                                     >
@@ -496,7 +501,8 @@ export const AddressManager = () => {
 
                     <List>
                         {results.steps.map((step: any, index: number) => (
-                            <ListItem key={index} divider>
+                            <ListItem key={index} divider
+                            >
                                 <ListItemText
                                     primary={`Step ${index + 1}`}
                                     secondary={
@@ -515,20 +521,21 @@ export const AddressManager = () => {
                                             <br />
                                             <Typography component="span" variant="body2">
                                                 Duration: {Math.round(step.duration.value / 60)} minutes
+                                            </Typography> 
+                                            <br/>
+                                            <Typography component="span" variant="body2">
+
+                                                <Button
+                                                    variant="outlined"
+                                                    size="small"
+                                                    startIcon={<DirectionsCarIcon />}
+                                                    onClick={() => handleNavigate(step.startAddress, step.endAddress)}
+                                                >Navigate</Button>
+
                                             </Typography>
                                         </>
                                     }
                                 />
-                                <ListItemSecondaryAction>
-                                    <Button
-                                        variant="outlined"
-                                        size="small"
-                                        startIcon={<DirectionsCarIcon />}
-                                        onClick={() => handleNavigate(step.startAddress, step.endAddress)}
-                                    >
-                                        Navigate
-                                    </Button>
-                                </ListItemSecondaryAction>
                             </ListItem>
                         ))}
                     </List>
