@@ -107,14 +107,17 @@ export const AddressManager = () => {
     };
 
     const handleOpenInMaps = (address: string) => {
-        const encodedAddress = encodeURIComponent(address);
-        window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
+        const url = import.meta.env.VITE_GOOGLE_MAPS_SEARCH_URL_TEMPLATE
+            .replace("%address", encodeURIComponent(address))
+        window.open(url, '_blank');
     };
 
     const handleNavigate = (startAddress: string, endAddress: string) => {
-        const encodedStart = encodeURIComponent(startAddress);
-        const encodedEnd = encodeURIComponent(endAddress);
-        window.open(`https://www.google.com/maps/dir/?api=1&origin=${encodedStart}&destination=${encodedEnd}`, '_blank');
+
+        const url = import.meta.env.VITE_GOOGLE_MAPS_DIRECTIONS_URL_TEMPLATE
+            .replace('%start', encodeURIComponent(startAddress))
+            .replace('%end', encodeURIComponent(endAddress))
+        window.open(url, '_blank');
     };
 
     const handleToggleSelect = (id: string) => {
