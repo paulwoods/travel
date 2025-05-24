@@ -227,19 +227,6 @@ export const AddressManager = () => {
                     >
                         Add
                     </Button>
-                    <Button
-                        variant="contained"
-                        color="secondary"
-                        startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
-                        onClick={handleSubmit}
-                        disabled={addresses.filter(addr => addr.isSelected).length < 2 || isLoading}
-                        sx={{
-                            minWidth: { xs: '100%', sm: 'auto' },
-                            height: { xs: '40px', sm: 'auto' }
-                        }}
-                    >
-                        {isLoading ? 'Calculating...' : 'Calculate Route'}
-                    </Button>
                 </Box>
 
                 <List>
@@ -409,6 +396,27 @@ export const AddressManager = () => {
                         </ListItem>
                     ))}
                 </List>
+
+                <Box sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mt: 3,
+                    mb: 1
+                }}>
+                    <Button
+                        variant="contained"
+                        color="secondary"
+                        startIcon={isLoading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
+                        onClick={handleSubmit}
+                        disabled={addresses.filter(addr => addr.isSelected).length < 2 || isLoading}
+                        sx={{
+                            minWidth: { xs: '100%', sm: '300px' },
+                            height: { xs: '48px', sm: 'auto' }
+                        }}
+                    >
+                        {isLoading ? 'Calculating...' : 'Calculate Route'}
+                    </Button>
+                </Box>
             </Paper>
 
             {isLoading && (
