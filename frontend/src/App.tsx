@@ -11,7 +11,7 @@ function App() {
     })
 
     return (
-        <ThemeProvider theme={darkTheme}>
+        <ThemeProvider theme={darkTheme} defaultMode="system">
             <CssBaseline />
             <Router>
                 <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
