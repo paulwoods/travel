@@ -30,7 +30,7 @@ function App() {
                                 Travel Planner
                             </Typography>
                             <Typography>
-                                {import.meta.env.VITE_VERCEL_ENV}
+                                {import.meta.env.VITE_VERCEL_ENV === 'production' ? null : import.meta.env.VITE_VERCEL_ENV}
                             </Typography>
                         </Toolbar>
                     </AppBar>
