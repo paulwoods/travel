@@ -21,7 +21,6 @@ import {
     IconButton,
     List,
     ListItem,
-    ListItemSecondaryAction,
     ListItemText,
     Paper,
     TextField,
@@ -345,9 +344,10 @@ export const AddressManager = () => {
                                             pr: { sm: 0, md:2 }
                                         }}
                                     />
-                                    <ListItemSecondaryAction
+                                    <Box
                                         sx={{
                                             position: { xs: 'static', md: 'absolute' },
+                                            right: { md: 0 },
                                             display: 'flex',
                                             gap: 0.5,
                                             justifyContent: { xs: 'center', sm: 'space-around' },
@@ -401,7 +401,7 @@ export const AddressManager = () => {
                                                 <DeleteIcon />
                                             </IconButton>
                                         </Tooltip>
-                                    </ListItemSecondaryAction>
+                                    </Box>
                                 </>
                             )}
                         </ListItem>
