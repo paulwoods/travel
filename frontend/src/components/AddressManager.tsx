@@ -193,7 +193,7 @@ export const AddressManager = () => {
                 gutterBottom
                 sx={{
                     fontSize: { xs: '1.5rem', sm: '1.75rem', md: '2rem' },
-                    textAlign: { xs: 'center', sm: 'left' }
+                    textAlign: { sm: 'center', md: 'left' }
                 }}
             >
                 Address Manager
@@ -201,7 +201,7 @@ export const AddressManager = () => {
 
             <Paper
                 sx={{
-                    p: { xs: 1.5, sm: 2, md: 3 },
+                    p: { sm: 1.5, md: 2, lg: 3 },
                     mb: 2,
                     borderRadius: 2
                 }}
@@ -210,7 +210,7 @@ export const AddressManager = () => {
                     display: 'flex',
                     gap: 1,
                     mb: 2,
-                    flexDirection: { xs: 'column', sm: 'row' }
+                    flexDirection: { sm: 'column', md: 'row' }
                 }}>
                     <TextField
                         fullWidth
@@ -226,8 +226,8 @@ export const AddressManager = () => {
                         onClick={handleAddAddress}
                         disabled={!newAddress.trim() || newAddress.length > 200}
                         sx={{
-                            minWidth: { xs: '100%', sm: 'auto' },
-                            height: { xs: '40px', sm: 'auto' }
+                            minWidth: { sm: '100%', md: 'auto' },
+                            height: { sm: '40px', md: 'auto' }
                         }}
                     >
                         Add
@@ -244,9 +244,9 @@ export const AddressManager = () => {
                                 borderRadius: 1,
                                 border: '1px solid',
                                 borderColor: 'divider',
-                                flexDirection: { xs: 'column', sm: 'row' },
-                                alignItems: { xs: 'stretch', sm: 'center' },
-                                gap: { xs: 1, sm: 0 },
+                                flexDirection: { sm: 'column', md: 'row' },
+                                alignItems: { sm: 'stretch', md: 'center' },
+                                gap: { sm: 1, md: 0 },
                                 position: 'relative'
                             }}
                         >
@@ -341,16 +341,16 @@ export const AddressManager = () => {
                                         }
                                         sx={{
                                             wordBreak: 'break-word',
-                                            pr: { xs: 0, sm: 2 }
+                                            pr: { sm: 0, md:2 }
                                         }}
                                     />
                                     <ListItemSecondaryAction
                                         sx={{
-                                            position: { xs: 'static', sm: 'absolute' },
+                                            position: { sm: 'static', md: 'absolute' },
                                             display: 'flex',
                                             gap: 1,
-                                            justifyContent: { xs: 'center', sm: 'flex-start' },
-                                            mt: { xs: 1, sm: 0 }
+                                            justifyContent: { xs: 'center', sm: 'space-around' },
+                                            mt: { md: 1, lg: 0 }
                                         }}
                                     >
                                         <Tooltip title={address.isStart ? "Remove as start address" : "Set as start address"}>
@@ -420,8 +420,8 @@ export const AddressManager = () => {
                         onClick={handleSubmit}
                         disabled={addresses.filter(addr => addr.isSelected).length < 2 || isLoading}
                         sx={{
-                            minWidth: { xs: '100%', sm: '300px' },
-                            height: { xs: '48px', sm: 'auto' }
+                            minWidth: { sm: '100%', md: '300px' },
+                            height: { sm: '48px', md: 'auto' }
                         }}
                     >
                         {isLoading ? 'Calculating...' : 'Calculate Route'}
