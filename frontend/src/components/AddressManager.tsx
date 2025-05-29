@@ -293,6 +293,7 @@ export const AddressManager = () => {
                             ) : (
                                 <>
                                     <ListItemText
+                                        
                                         primary={
                                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
 
@@ -346,9 +347,9 @@ export const AddressManager = () => {
                                     />
                                     <ListItemSecondaryAction
                                         sx={{
-                                            position: { sm: 'static', md: 'absolute' },
+                                            position: { xs: 'static', md: 'absolute' },
                                             display: 'flex',
-                                            gap: 1,
+                                            gap: 0.5,
                                             justifyContent: { xs: 'center', sm: 'space-around' },
                                             mt: { md: 1, lg: 0 }
                                         }}
